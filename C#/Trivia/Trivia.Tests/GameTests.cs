@@ -6,8 +6,10 @@ public class GameTests(ITestOutputHelper testOutputHelper)
 {
     private static bool _notAWinner;
     
-    [Fact]
-    public void GoldenMasterSeed2()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    public void GoldenMasterSeed2(int scenarioIndex)
     {
         // Arrange
         using var writer = new StringWriter();
@@ -19,7 +21,8 @@ public class GameTests(ITestOutputHelper testOutputHelper)
         aGame.Add("Pat");
         aGame.Add("Sue");
 
-        var rand = new Random(2);
+        var goldenMasterMockScenario = GoldenMasterMockScenarios.Scenarios.ElementAt(scenarioIndex);
+        var rand = new Random(goldenMasterMockScenario.SeedValue);
         
         // Act
         do
@@ -171,164 +174,6 @@ public class GameTests(ITestOutputHelper testOutputHelper)
                              """;
         
         // Assert
-        Assert.Equal(expectedOutput, actualOutput);
-    }
-    
-    [Fact]
-    public void GoldenMasterSeed3()
-    {
-        // Arrange
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-            
-        var aGame = new Game();
-
-        aGame.Add("Chet");
-        aGame.Add("Pat");
-        aGame.Add("Sue");
-
-        var rand = new Random(3);
-        
-        // Act
-        do
-        {
-            aGame.Roll(rand.Next(5) + 1);
-
-            if (rand.Next(9) == 7)
-            {
-                _notAWinner = aGame.WrongAnswer();
-            }
-            else
-            {
-                _notAWinner = aGame.WasCorrectlyAnswered();
-            }
-        } while (_notAWinner);
-        
-        var actualOutput = writer.ToString();
-        Console.SetOut(Console.Out);
-        
-        // Assert
-        var expectedOutput = """
-                             Chet was added
-                             They are player number 1
-                             Pat was added
-                             They are player number 2
-                             Sue was added
-                             They are player number 3
-                             Chet is the current player
-                             They have rolled a 2
-                             Chet's new location is 2
-                             The category is Sports
-                             Sports Question 0
-                             Answer was correct!!!!
-                             Chet now has 1 Gold Coins.
-                             Pat is the current player
-                             They have rolled a 5
-                             Pat's new location is 5
-                             The category is Science
-                             Science Question 0
-                             Answer was correct!!!!
-                             Pat now has 1 Gold Coins.
-                             Sue is the current player
-                             They have rolled a 3
-                             Sue's new location is 3
-                             The category is Rock
-                             Rock Question 0
-                             Answer was correct!!!!
-                             Sue now has 1 Gold Coins.
-                             Chet is the current player
-                             They have rolled a 2
-                             Chet's new location is 4
-                             The category is Pop
-                             Pop Question 0
-                             Answer was correct!!!!
-                             Chet now has 2 Gold Coins.
-                             Pat is the current player
-                             They have rolled a 2
-                             Pat's new location is 7
-                             The category is Rock
-                             Rock Question 1
-                             Answer was correct!!!!
-                             Pat now has 2 Gold Coins.
-                             Sue is the current player
-                             They have rolled a 3
-                             Sue's new location is 6
-                             The category is Sports
-                             Sports Question 1
-                             Question was incorrectly answered
-                             Sue was sent to the penalty box
-                             Chet is the current player
-                             They have rolled a 4
-                             Chet's new location is 8
-                             The category is Pop
-                             Pop Question 1
-                             Answer was correct!!!!
-                             Chet now has 3 Gold Coins.
-                             Pat is the current player
-                             They have rolled a 1
-                             Pat's new location is 8
-                             The category is Pop
-                             Pop Question 2
-                             Answer was correct!!!!
-                             Pat now has 3 Gold Coins.
-                             Sue is the current player
-                             They have rolled a 1
-                             Sue is getting out of the penalty box
-                             Sue's new location is 7
-                             The category is Rock
-                             Rock Question 2
-                             Question was incorrectly answered
-                             Sue was sent to the penalty box
-                             Chet is the current player
-                             They have rolled a 4
-                             Chet's new location is 0
-                             The category is Pop
-                             Pop Question 3
-                             Answer was correct!!!!
-                             Chet now has 4 Gold Coins.
-                             Pat is the current player
-                             They have rolled a 2
-                             Pat's new location is 10
-                             The category is Sports
-                             Sports Question 2
-                             Answer was correct!!!!
-                             Pat now has 4 Gold Coins.
-                             Sue is the current player
-                             They have rolled a 3
-                             Sue is getting out of the penalty box
-                             Sue's new location is 10
-                             The category is Sports
-                             Sports Question 3
-                             Answer was correct!!!!
-                             Sue now has 2 Gold Coins.
-                             Chet is the current player
-                             They have rolled a 5
-                             Chet's new location is 5
-                             The category is Science
-                             Science Question 1
-                             Answer was correct!!!!
-                             Chet now has 5 Gold Coins.
-                             Pat is the current player
-                             They have rolled a 3
-                             Pat's new location is 1
-                             The category is Science
-                             Science Question 2
-                             Answer was correct!!!!
-                             Pat now has 5 Gold Coins.
-                             Sue is the current player
-                             They have rolled a 2
-                             Sue is not getting out of the penalty box
-                             Chet is the current player
-                             They have rolled a 2
-                             Chet's new location is 7
-                             The category is Rock
-                             Rock Question 3
-                             Answer was correct!!!!
-                             Chet now has 6 Gold Coins.
-                             
-                             """;
-        
-        // Assert
-        Assert.Equal(expectedOutput, actualOutput);
+        Assert.Equal(goldenMasterMockScenario.ExpectedOutput, actualOutput);
     }
 }
